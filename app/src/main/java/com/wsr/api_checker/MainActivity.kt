@@ -6,7 +6,9 @@ import android.widget.ArrayAdapter
 import com.wsr.api_checker.databinding.ActivityMainBinding
 import com.wsr.api_checker.methods.Get
 import com.wsr.api_checker.methods.HttpMethod
+import com.wsr.api_checker.methods.Post
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,8 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        methods = Get()
 
         _binding = ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(this.root)
@@ -34,14 +34,17 @@ class MainActivity : AppCompatActivity() {
 
             button.setOnClickListener {
 
-                if(spinner.selectedItem is String){
-                    when(spinner.selectedItem){
-                        "GET" -> runBlocking {
+                val client = OkHttpClient.Builder().build()
 
+                when(spinner.selectedItem){
+                    "GET" -> methods = Get(client)
+                    "POST" -> methods = Post(client)
+                    "PUT" -> TODO()
+                    "DELETE" -> TODO()
+                }
 
-                            binding.text.text = methods.getRequest(binding.urlInput.text.toString())
-                        }
-                    }
+                runBlocking {
+                    binding.text.text = methods.getRequest(binding.urlInput.text.toString())
                 }
             }
         }

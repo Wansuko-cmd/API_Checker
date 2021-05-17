@@ -2,16 +2,20 @@ package com.wsr.api_checker.methods
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class Get(override val client: OkHttpClient) : HttpMethod {
-
-
+class Post(override val client: OkHttpClient) : HttpMethod {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): String = withContext(Dispatchers.IO){
-        val request = Request.Builder().url(url).build()
+        val formBodyBuilder = FormBody.Builder()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(formBodyBuilder.build())
+            .build()
 
         val response = client.newCall(request).execute()
 

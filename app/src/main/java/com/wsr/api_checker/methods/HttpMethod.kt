@@ -10,5 +10,4 @@ interface HttpMethod {
     //Urlを渡したところにリクエストを送る関数
     suspend fun getRequest(url: String): String
 
-
 }
