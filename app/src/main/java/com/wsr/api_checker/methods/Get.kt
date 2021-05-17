@@ -9,6 +9,7 @@ class Get() : HttpMethod {
 
     override val client = OkHttpClient.Builder().build()
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): String = withContext(Dispatchers.IO){
         val request = Request.Builder().url(url).build()
 
