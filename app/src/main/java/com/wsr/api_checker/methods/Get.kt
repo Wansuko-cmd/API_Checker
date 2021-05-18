@@ -15,6 +15,6 @@ class Get(override val client: OkHttpClient) : HttpMethod {
 
         val response = client.newCall(request).execute()
 
-        return@withContext response.body?.string() ?: ""
+        return@withContext response.body?.string().orEmpty()
     }
 }
