@@ -17,6 +17,7 @@
 
     <fragment
         android:id="@+id/show_result_fragment"
+        android:name="com.wsr.api_checker.fragments.ShowResultFragment"
         android:label="show_result_fragment"
         tools:layout="@layout/fragment_show_result"/>
 

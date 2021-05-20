@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.wsr.api_checker.R
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.methods.Get
@@ -44,18 +45,20 @@ class InputUrlFragment : Fragment() {
 
             button.setOnClickListener {
 
-                val client = OkHttpClient.Builder().build()
+                findNavController().navigate(R.id.action_input_url_fragment_to_show_result_fragment)
 
-                when(spinner.selectedItem){
-                    "GET" -> methods = Get(client)
-                    "POST" -> methods = Post(client)
-                    "PUT" -> TODO()
-                    "DELETE" -> TODO()
-                }
-
-                runBlocking {
-                    binding.text.text = methods.getRequest(binding.urlInput.text.toString())
-                }
+//                val client = OkHttpClient.Builder().build()
+//
+//                when(spinner.selectedItem){
+//                    "GET" -> methods = Get(client)
+//                    "POST" -> methods = Post(client)
+//                    "PUT" -> TODO()
+//                    "DELETE" -> TODO()
+//                }
+//
+//                runBlocking {
+//                    binding.text.text = methods.getRequest(binding.urlInput.text.toString())
+//                }
             }
         }
     }
