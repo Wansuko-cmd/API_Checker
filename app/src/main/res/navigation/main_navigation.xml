@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/input_url_fragment">
+
+    <fragment
+        android:id="@+id/input_url_fragment"
+        android:name="com.wsr.api_checker.fragments.InputUrlFragment"
+        android:label="input_url_fragment"
+        tools:layout="@layout/fragment_input_url" >
+        <action
+            android:id="@+id/action_input_url_fragment_to_show_result_fragment"
+            app:destination="@id/show_result_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/show_result_fragment"
+        android:label="show_result_fragment"
+        tools:layout="@layout/fragment_show_result"/>
+
+</navigation>
