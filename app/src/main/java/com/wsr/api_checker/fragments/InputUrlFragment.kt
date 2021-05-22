@@ -13,6 +13,7 @@ import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.methods.Get
 import com.wsr.api_checker.methods.HttpMethod
 import com.wsr.api_checker.methods.Post
+import com.wsr.api_checker.methods.Put
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 
@@ -52,7 +53,7 @@ class InputUrlFragment : Fragment() {
                 when(spinner.selectedItem){
                     "GET" -> methods = Get(client)
                     "POST" -> methods = Post(client)
-                    "PUT" -> TODO()
+                    "PUT" -> methods = Put(client)
                     "DELETE" -> TODO()
                 }
 
