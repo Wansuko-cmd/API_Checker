@@ -8,8 +8,6 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:text="TEST"
-            android:textSize="100dp"
             android:id="@+id/show_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

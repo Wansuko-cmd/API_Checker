@@ -45,20 +45,22 @@ class InputUrlFragment : Fragment() {
 
             button.setOnClickListener {
 
-                findNavController().navigate(R.id.action_input_url_fragment_to_show_result_fragment)
 
-//                val client = OkHttpClient.Builder().build()
-//
-//                when(spinner.selectedItem){
-//                    "GET" -> methods = Get(client)
-//                    "POST" -> methods = Post(client)
-//                    "PUT" -> TODO()
-//                    "DELETE" -> TODO()
-//                }
-//
-//                runBlocking {
-//                    binding.text.text = methods.getRequest(binding.urlInput.text.toString())
-//                }
+                val client = OkHttpClient.Builder().build()
+
+                when(spinner.selectedItem){
+                    "GET" -> methods = Get(client)
+                    "POST" -> methods = Post(client)
+                    "PUT" -> TODO()
+                    "DELETE" -> TODO()
+                }
+
+                runBlocking {
+                    val result = methods.getRequest(binding.urlInput.text.toString())
+                    val action = InputUrlFragmentDirections
+                        .actionInputUrlFragmentToShowResultFragment(result)
+                    findNavController().navigate(action)
+                }
             }
         }
     }
