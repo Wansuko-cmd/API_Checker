@@ -9,7 +9,7 @@ import okhttp3.Request
 class Post(override val client: OkHttpClient) : HttpMethod {
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun getRequest(url: String): String = withContext(Dispatchers.IO){
+    override suspend fun getRequest(url: String): Pair<Boolean, String> = withContext(Dispatchers.IO){
         val formBodyBuilder = FormBody.Builder()
 
         val request = Request.Builder()
@@ -19,6 +19,6 @@ class Post(override val client: OkHttpClient) : HttpMethod {
 
         val response = client.newCall(request).execute()
 
-        return@withContext response.body?.string() ?: ""
+        return@withContext Pair(true, response.body?.string().orEmpty())
     }
 }

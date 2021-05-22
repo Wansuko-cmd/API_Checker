@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.wsr.api_checker.R
@@ -56,10 +57,21 @@ class InputUrlFragment : Fragment() {
                 }
 
                 runBlocking {
-                    val result = methods.getRequest(binding.urlInput.text.toString())
-                    val action = InputUrlFragmentDirections
-                        .actionInputUrlFragmentToShowResultFragment(result)
-                    findNavController().navigate(action)
+                    val (isShowResult, result) = methods.getRequest(binding.urlInput.text.toString())
+
+                    if(isShowResult){
+                        val action = InputUrlFragmentDirections
+                            .actionInputUrlFragmentToShowResultFragment(result)
+                        findNavController().navigate(action)
+                    }else{
+                        val message = when(result){
+                            "UnknownHostException" -> "ホストが見つかりません"
+                            "IllegalArgumentException" -> "無効なホスト、ポスト名です"
+                            "ConnectException" -> "localhostとの接続に失敗しました"
+                            else -> result
+                        }
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

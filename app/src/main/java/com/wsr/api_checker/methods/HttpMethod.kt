@@ -8,6 +8,6 @@ interface HttpMethod {
     val client: OkHttpClient
 
     //Urlを渡したところにリクエストを送る関数
-    suspend fun getRequest(url: String): String
+    suspend fun getRequest(url: String): Pair<Boolean, String>
 
 }
