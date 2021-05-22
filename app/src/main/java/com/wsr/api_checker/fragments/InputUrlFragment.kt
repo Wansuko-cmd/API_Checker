@@ -10,10 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.wsr.api_checker.R
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
-import com.wsr.api_checker.methods.Get
-import com.wsr.api_checker.methods.HttpMethod
-import com.wsr.api_checker.methods.Post
-import com.wsr.api_checker.methods.Put
+import com.wsr.api_checker.methods.*
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 
@@ -54,7 +51,7 @@ class InputUrlFragment : Fragment() {
                     "GET" -> methods = Get(client)
                     "POST" -> methods = Post(client)
                     "PUT" -> methods = Put(client)
-                    "DELETE" -> TODO()
+                    "DELETE" -> methods = Delete(client)
                 }
 
                 runBlocking {
