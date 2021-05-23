@@ -86,7 +86,14 @@ class InputUrlFragment : Fragment() {
                 }
 
                 runBlocking {
-                    val (isShowResult, result) = methods.getRequest(binding.urlInput.text.toString())
+                    var url = binding.urlInput.text.toString()
+
+                    for((index, parameter) in setValueViewModel.parameters.withIndex()){
+                        url += if(index == 0) "?" else "&"
+                        url += "${parameter.key}=${parameter.value}"
+                    }
+
+                    val (isShowResult, result) = methods.getRequest(url)
 
                     if(isShowResult){
                         val action = InputUrlFragmentDirections
