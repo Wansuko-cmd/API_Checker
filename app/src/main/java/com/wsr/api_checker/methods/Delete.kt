@@ -7,6 +7,7 @@ import okhttp3.Request
 
 class Delete(override val client: OkHttpClient) : HttpMethod() {
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): Pair<Boolean, String> = withContext(Dispatchers.IO){
 
         try{

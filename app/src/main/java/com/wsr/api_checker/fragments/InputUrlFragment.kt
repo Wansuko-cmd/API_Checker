@@ -8,7 +8,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.R
+import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.methods.*
 import kotlinx.coroutines.runBlocking
@@ -18,6 +21,9 @@ class InputUrlFragment : Fragment() {
 
     private var _binding: FragmentInputUrlBinding? = null
     private val binding get() = _binding!!
+
+    private var recyclerView: RecyclerView? = null
+    lateinit var setValueAdapter: SetValueAdapter
 
     private lateinit var methods: HttpMethod
 
@@ -33,13 +39,19 @@ class InputUrlFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerView = binding.setValueRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+//            adapter =
+        }
+
         binding.run{
 
             ArrayAdapter
                 .createFromResource(requireContext(), R.array.methods, android.R.layout.simple_spinner_item)
                 .apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinner.adapter = this
+                    methodsSpinner.adapter = this
                 }
 
             button.setOnClickListener {
@@ -47,7 +59,7 @@ class InputUrlFragment : Fragment() {
 
                 val client = OkHttpClient.Builder().build()
 
-                when(spinner.selectedItem){
+                when(methodsSpinner.selectedItem){
                     "GET" -> methods = Get(client)
                     "POST" -> methods = Post(client)
                     "PUT" -> methods = Put(client)
