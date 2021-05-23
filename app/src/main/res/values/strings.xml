@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">API_Checker</string>
     <string name="url">URL</string>
+    <string name="key">Key</string>
+    <string name="value">Value</string>
 
     <string-array name="methods">
         <item>GET</item>

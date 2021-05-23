@@ -1,20 +1,24 @@
 package com.wsr.api_checker.adapters
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.wsr.api_checker.databinding.ItemsSetValueBinding
 import com.wsr.api_checker.view_holder.SetValueViewHolder
+import com.wsr.api_checker.view_model.SetValueViewModel
 
-class SetValueAdapter : RecyclerView.Adapter<SetValueViewHolder>() {
+class SetValueAdapter(private val setValueViewModel: SetValueViewModel) : RecyclerView.Adapter<SetValueViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SetValueViewHolder {
-        TODO("Not yet implemented")
-    }
-
-    override fun onBindViewHolder(holder: SetValueViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val inflater = LayoutInflater.from(parent.context)
+        return SetValueViewHolder(ItemsSetValueBinding.inflate(inflater, parent, false))
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return setValueViewModel.parameters.size
     }
 
+    override fun onBindViewHolder(holder: SetValueViewHolder, position: Int) {
+        holder.key.setText("KEY")
+        holder.value.setText("VALUE")
+    }
 }

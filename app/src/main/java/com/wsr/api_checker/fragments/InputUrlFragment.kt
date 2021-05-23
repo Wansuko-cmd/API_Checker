@@ -14,6 +14,7 @@ import com.wsr.api_checker.R
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.methods.*
+import com.wsr.api_checker.view_model.SetValueViewModel
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 
@@ -24,6 +25,7 @@ class InputUrlFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
     lateinit var setValueAdapter: SetValueAdapter
+    lateinit var setValueViewModel: SetValueViewModel
 
     private lateinit var methods: HttpMethod
 
@@ -39,10 +41,14 @@ class InputUrlFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setValueViewModel = SetValueViewModel()
+
+        setValueAdapter = SetValueAdapter(setValueViewModel)
+
         recyclerView = binding.setValueRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-//            adapter =
+            adapter = setValueAdapter
         }
 
         binding.run{
