@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.databinding.ItemsSetValueBinding
+import com.wsr.api_checker.entities.Parameter
 import com.wsr.api_checker.view_holder.SetValueViewHolder
 import com.wsr.api_checker.view_model.SetValueViewModel
 
@@ -14,11 +15,12 @@ class SetValueAdapter(private val setValueViewModel: SetValueViewModel) : Recycl
     }
 
     override fun getItemCount(): Int {
-        return setValueViewModel.parameters.size
+        return setValueViewModel.parameters.size + 3
     }
 
     override fun onBindViewHolder(holder: SetValueViewHolder, position: Int) {
-        holder.key.setText("KEY")
-        holder.value.setText("VALUE")
+        holder.key.setText("Hello")
+        holder.value.setText("World")
+        holder.setBind(Parameter("Key", "Value"))
     }
 }
