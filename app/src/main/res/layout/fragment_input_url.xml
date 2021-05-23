@@ -22,18 +22,26 @@
         app:layout_constraintStart_toEndOf="parent"
         />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_parameter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/url_input"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/set_value_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/url_input"
-        app:layout_constraintBottom_toTopOf="@id/button"
-        />
+        app:layout_constraintBottom_toTopOf="@id/send_button"
+        app:layout_constraintTop_toBottomOf="@id/add_parameter"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/send"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

@@ -3,6 +3,7 @@
     <string name="url">URL</string>
     <string name="key">Key</string>
     <string name="value">Value</string>
+    <string name="send">SEND</string>
 
     <string-array name="methods">
         <item>GET</item>

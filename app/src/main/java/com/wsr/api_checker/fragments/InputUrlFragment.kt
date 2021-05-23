@@ -1,6 +1,7 @@
 package com.wsr.api_checker.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.R
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
+import com.wsr.api_checker.entities.Parameter
 import com.wsr.api_checker.methods.*
 import com.wsr.api_checker.view_model.SetValueViewModel
 import kotlinx.coroutines.runBlocking
@@ -24,8 +26,8 @@ class InputUrlFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var recyclerView: RecyclerView? = null
-    lateinit var setValueAdapter: SetValueAdapter
-    lateinit var setValueViewModel: SetValueViewModel
+    private lateinit var setValueAdapter: SetValueAdapter
+    private lateinit var setValueViewModel: SetValueViewModel
 
     private lateinit var methods: HttpMethod
 
@@ -60,9 +62,16 @@ class InputUrlFragment : Fragment() {
                     methodsSpinner.adapter = this
                 }
 
-            button.setOnClickListener {
+            addParameter.setOnClickListener {
+                val temp = setValueViewModel.parameters
+                temp.add(Parameter())
+                setValueViewModel.parameters = temp
+                setValueAdapter.notifyDataSetChanged()
+            }
 
+            sendButton.setOnClickListener {
 
+                Log.i("PARAMETER", setValueViewModel.parameters.toString())
                 val client = OkHttpClient.Builder().build()
 
                 when(methodsSpinner.selectedItem){

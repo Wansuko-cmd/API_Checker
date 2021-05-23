@@ -8,19 +8,19 @@ import com.wsr.api_checker.entities.Parameter
 import com.wsr.api_checker.view_holder.SetValueViewHolder
 import com.wsr.api_checker.view_model.SetValueViewModel
 
-class SetValueAdapter(private val setValueViewModel: SetValueViewModel) : RecyclerView.Adapter<SetValueViewHolder>() {
+class SetValueAdapter(
+    private val setValueViewModel: SetValueViewModel
+    ) : RecyclerView.Adapter<SetValueViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SetValueViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return SetValueViewHolder(ItemsSetValueBinding.inflate(inflater, parent, false))
     }
 
     override fun getItemCount(): Int {
-        return setValueViewModel.parameters.size + 3
+        return setValueViewModel.parameters.size
     }
 
     override fun onBindViewHolder(holder: SetValueViewHolder, position: Int) {
-        holder.key.setText("Hello")
-        holder.value.setText("World")
-        holder.setBind(Parameter("Key", "Value"))
+        holder.setBind(setValueViewModel.parameters[position])
     }
 }
