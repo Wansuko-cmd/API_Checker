@@ -7,8 +7,7 @@ import okhttp3.Request
 
 class Get(override val client: OkHttpClient) : HttpMethod() {
 
-
-
+    //Urlを渡したところにリクエストを送る関数
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): Pair<Boolean, String> = withContext(Dispatchers.IO){
 

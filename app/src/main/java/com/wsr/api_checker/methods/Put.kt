@@ -8,6 +8,7 @@ import okhttp3.Request
 
 class Put(override val client: OkHttpClient) : HttpMethod() {
 
+    //Urlを渡したところにリクエストを送る関数
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): Pair<Boolean, String> = withContext(Dispatchers.IO) {
 
@@ -22,7 +23,8 @@ class Put(override val client: OkHttpClient) : HttpMethod() {
             val response = client.newCall(request).execute()
 
             return@withContext Pair(true, response.body?.string().orEmpty())
-        }catch (e: Exception){
+        }
+        catch (e: Exception){
             return@withContext errorHandling(e)
         }
     }

@@ -7,6 +7,7 @@ import okhttp3.Request
 
 class Delete(override val client: OkHttpClient) : HttpMethod() {
 
+    //Urlを渡したところにリクエストを送る関数
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getRequest(url: String): Pair<Boolean, String> = withContext(Dispatchers.IO){
 
@@ -16,7 +17,8 @@ class Delete(override val client: OkHttpClient) : HttpMethod() {
             val response = client.newCall(request).execute()
 
             return@withContext Pair(true, response.toString())
-        }catch (e: Exception){
+        }
+        catch (e: Exception){
             return@withContext errorHandling(e)
         }
     }

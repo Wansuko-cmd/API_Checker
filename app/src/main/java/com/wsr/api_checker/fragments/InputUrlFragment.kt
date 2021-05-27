@@ -1,7 +1,6 @@
 package com.wsr.api_checker.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,72 +43,102 @@ class InputUrlFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Methodを決めるためのスピナーの設定
+        setSpinner()
+
+        //パラメータのためのViewModelの設定
         setValueViewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(SetValueViewModel::class.java)
 
+        //アダプターの設定
         setValueAdapter = SetValueAdapter(setValueViewModel)
 
+        //RecyclerViewの設定
         recyclerView = binding.setValueRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = setValueAdapter
         }
 
+        //Viewの設定
         binding.run{
+            //双方向データバインディングをするViewModelの設定
+            this.serValueViewModel = setValueViewModel
 
-            ArrayAdapter
-                .createFromResource(requireContext(), R.array.methods, android.R.layout.simple_spinner_item)
-                .apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    methodsSpinner.adapter = this
-                }
+            //パラメータを追加するボタンを押したときのイベントの設定
+            addParameter.setOnClickListener(addParameterSetOnClickListener)
 
-            addParameter.setOnClickListener {
-                val temp = setValueViewModel.parameters
-                temp.add(Parameter())
-                setValueViewModel.parameters = temp
-                setValueAdapter.notifyDataSetChanged()
+            //リクエストを送るボタンを押したときのイベントの設定
+            sendButton.setOnClickListener(sendButtonSetOnClickListener)
+        }
+    }
+
+
+
+    //メソッドを指定するスピナーの設定をする関数
+    private fun setSpinner(){
+        ArrayAdapter
+            .createFromResource(requireContext(), R.array.methods, android.R.layout.simple_spinner_item)
+            .apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                binding.methodsSpinner.adapter = this
             }
+    }
 
-            sendButton.setOnClickListener {
 
-                Log.i("PARAMETER", setValueViewModel.parameters.toString())
-                val client = OkHttpClient.Builder().build()
 
-                when(methodsSpinner.selectedItem){
-                    "GET" -> methods = Get(client)
-                    "POST" -> methods = Post(client)
-                    "PUT" -> methods = Put(client)
-                    "DELETE" -> methods = Delete(client)
+    //リクエストを送信するためのボタンの設定をする関数
+    private val sendButtonSetOnClickListener: (View) -> Unit = {
+
+        //クライアントの作成
+        val client = OkHttpClient.Builder().build()
+
+        //メソッドの設定
+        when(binding.methodsSpinner.selectedItem){
+            "GET" -> methods = Get(client)
+            "POST" -> methods = Post(client)
+            "PUT" -> methods = Put(client)
+            "DELETE" -> methods = Delete(client)
+        }
+
+        runBlocking {
+
+            //URLの取得、および作成
+            val url = setValueViewModel.getUrlWithParameters()
+
+            //リクエストを飛ばす処理
+            val (isShowResult, result) = methods.getRequest(url)
+
+            //結果を表示する画面へ遷移
+            if(isShowResult){
+                val action = InputUrlFragmentDirections
+                    .actionInputUrlFragmentToShowResultFragment(result)
+                findNavController().navigate(action)
+
+            }
+            //Toastを用いてエラー等を表示
+            else{
+                val message = when(result){
+                    "UnknownHostException" -> "ホストが見つかりません"
+                    "IllegalArgumentException" -> "無効なホスト、ポスト名です"
+                    "ConnectException" -> "localhostとの接続に失敗しました"
+                    "SSLHandshakeException" -> "接続先はSSL通信が有効ではありません"
+                    else -> result
                 }
-
-                runBlocking {
-                    var url = binding.urlInput.text.toString()
-
-                    for((index, parameter) in setValueViewModel.parameters.withIndex()){
-                        url += if(index == 0) "?" else "&"
-                        url += "${parameter.key}=${parameter.value}"
-                    }
-
-                    val (isShowResult, result) = methods.getRequest(url)
-
-                    if(isShowResult){
-                        val action = InputUrlFragmentDirections
-                            .actionInputUrlFragmentToShowResultFragment(result)
-                        findNavController().navigate(action)
-                    }else{
-                        val message = when(result){
-                            "UnknownHostException" -> "ホストが見つかりません"
-                            "IllegalArgumentException" -> "無効なホスト、ポスト名です"
-                            "ConnectException" -> "localhostとの接続に失敗しました"
-                            else -> result
-                        }
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-                    }
-                }
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+
+
+    //新しいパラメーターを追加するためのボタンの設定をする関数
+    private val addParameterSetOnClickListener: (View) -> Unit = {
+        val parameters = setValueViewModel.parameters
+        parameters.add(Parameter())
+        setValueViewModel.parameters = parameters
+        setValueAdapter.notifyDataSetChanged()
     }
 }

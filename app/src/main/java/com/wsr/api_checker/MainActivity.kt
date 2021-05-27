@@ -10,5 +10,3 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 }
-
-//                "https://i10jan-api.herokuapp.com/v1.1/api"
