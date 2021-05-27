@@ -109,7 +109,7 @@ class InputUrlFragment : Fragment() {
             val url = setValueViewModel.getUrlWithParameters()
 
             //リクエストを飛ばす処理
-            val (isShowResult, result) = methods.getRequest(url)
+            val (isShowResult, result) = methods.getRequest(setValueViewModel)
 
             //結果を表示する画面へ遷移
             if(isShowResult){

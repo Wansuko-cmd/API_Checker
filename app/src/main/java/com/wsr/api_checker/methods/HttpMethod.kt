@@ -1,5 +1,6 @@
 package com.wsr.api_checker.methods
 
+import com.wsr.api_checker.view_model.SetValueViewModel
 import okhttp3.OkHttpClient
 import java.lang.IllegalArgumentException
 import java.lang.reflect.InvocationTargetException
@@ -13,7 +14,7 @@ abstract class HttpMethod {
     abstract val client: OkHttpClient
 
     //Urlを渡したところにリクエストを送る関数
-    abstract suspend fun getRequest(url: String): Pair<Boolean, String>
+    abstract suspend fun getRequest(setValueViewModel: SetValueViewModel): Pair<Boolean, String>
 
     //通信の際起こったエラーのハンドリング
     fun errorHandling(e: Exception): Pair<Boolean, String>{
