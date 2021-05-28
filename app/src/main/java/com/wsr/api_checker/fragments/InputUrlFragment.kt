@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.R
+import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.entities.Parameter
@@ -27,8 +28,12 @@ class InputUrlFragment : Fragment() {
     private var _binding: FragmentInputUrlBinding? = null
     private val binding get() = _binding!!
 
-    private var recyclerView: RecyclerView? = null
+    private var setValueRecyclerView: RecyclerView? = null
+    private var setNonUseValueRecyclerView: RecyclerView? = null
+
     private lateinit var setValueAdapter: SetValueAdapter
+    private lateinit var setNonUseValueAdapter: SetNonUseValueAdapter
+
     private lateinit var setValueViewModel: SetValueViewModel
 
     private lateinit var methods: HttpMethod
@@ -58,16 +63,26 @@ class InputUrlFragment : Fragment() {
         setValueAdapter = SetValueAdapter(setValueViewModel)
 
         //RecyclerViewの設定
-        recyclerView = binding.setValueRecyclerView.apply {
+        setValueRecyclerView = binding.setValueRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = setValueAdapter
         }
 
-        val setValueItemTouchHelperCallback
-        = ItemTouchHelper(SetValueItemTouchHelper(setValueViewModel, setValueAdapter))
+        setNonUseValueAdapter = SetNonUseValueAdapter(setValueViewModel)
 
-        setValueItemTouchHelperCallback.attachToRecyclerView(recyclerView)
+        setNonUseValueRecyclerView = binding.setNonUseValueRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = setNonUseValueAdapter
+        }
+
+
+        val setValueItemTouchHelperCallback
+                = ItemTouchHelper(SetValueItemTouchHelper(setValueViewModel, setValueAdapter, setNonUseValueAdapter))
+
+        setValueItemTouchHelperCallback.attachToRecyclerView(setValueRecyclerView)
+
 
         //Viewの設定
         binding.run{

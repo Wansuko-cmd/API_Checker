@@ -17,4 +17,11 @@ class SetValueViewModel: ViewModel() {
     var parameters: MutableList<Parameter>
         get() = _parameters.value ?: mutableListOf()
         set(value) = _parameters.postValue(value)
+
+
+    //ユーザーが入力したパラメータのリスト
+    private val _nonUseParameters: MutableLiveData<MutableList<Parameter>> = MutableLiveData()
+    var nonUseParameters: MutableList<Parameter>
+        get() = _nonUseParameters.value ?: mutableListOf()
+        set(value) = _nonUseParameters.postValue(value)
 }
