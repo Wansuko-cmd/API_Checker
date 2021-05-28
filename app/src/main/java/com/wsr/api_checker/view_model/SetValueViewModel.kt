@@ -17,16 +17,4 @@ class SetValueViewModel: ViewModel() {
     var parameters: MutableList<Parameter>
         get() = _parameters.value ?: mutableListOf()
         set(value) = _parameters.postValue(value)
-
-    //パラメータも書いたURLを返す関数
-    fun getUrlWithParameters(): String{
-        var resultUrl = url
-
-        for((index, parameter) in parameters.withIndex()){
-            resultUrl += if(index == 0) "?" else "&"
-            resultUrl += "${parameter.key}=${parameter.value}"
-        }
-
-        return resultUrl
-    }
 }

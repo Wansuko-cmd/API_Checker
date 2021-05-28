@@ -1,4 +1,4 @@
-package com.wsr.api_checker.view_holder
+package com.wsr.api_checker.adapters.view_holder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.databinding.ItemsSetValueBinding

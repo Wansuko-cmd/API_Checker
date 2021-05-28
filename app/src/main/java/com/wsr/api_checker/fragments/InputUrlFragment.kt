@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.R
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.entities.Parameter
+import com.wsr.api_checker.item_touch_helper.SetValueItemTouchHelper
 import com.wsr.api_checker.methods.*
 import com.wsr.api_checker.view_model.SetValueViewModel
 import kotlinx.coroutines.runBlocking
@@ -62,6 +64,11 @@ class InputUrlFragment : Fragment() {
             adapter = setValueAdapter
         }
 
+        val setValueItemTouchHelperCallback
+        = ItemTouchHelper(SetValueItemTouchHelper(setValueViewModel, setValueAdapter))
+
+        setValueItemTouchHelperCallback.attachToRecyclerView(recyclerView)
+
         //Viewの設定
         binding.run{
             //双方向データバインディングをするViewModelの設定
@@ -104,9 +111,6 @@ class InputUrlFragment : Fragment() {
         }
 
         runBlocking {
-
-            //URLの取得、および作成
-            val url = setValueViewModel.getUrlWithParameters()
 
             //リクエストを飛ばす処理
             val (isShowResult, result) = methods.getRequest(setValueViewModel)

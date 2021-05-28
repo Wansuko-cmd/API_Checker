@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.databinding.ItemsSetValueBinding
-import com.wsr.api_checker.view_holder.SetValueViewHolder
+import com.wsr.api_checker.adapters.view_holder.SetValueViewHolder
 import com.wsr.api_checker.view_model.SetValueViewModel
 
 class SetValueAdapter(
