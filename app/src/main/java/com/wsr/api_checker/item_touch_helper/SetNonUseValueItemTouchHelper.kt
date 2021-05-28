@@ -6,7 +6,7 @@ import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.view_model.SetValueViewModel
 
-class SetValueItemTouchHelper(
+class SetNonUseValueItemTouchHelper(
     private val setValueViewModel: SetValueViewModel,
     private val setValueAdapter: SetValueAdapter,
     private val setNonUseValueAdapter: SetNonUseValueAdapter
@@ -25,16 +25,17 @@ class SetValueItemTouchHelper(
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val index = viewHolder.bindingAdapterPosition
 
-        val tempList = setValueViewModel.parameters
+        val tempList = setValueViewModel.nonUseParameters
         tempList.removeAt(index).let{
-            val param = setValueViewModel.nonUseParameters
+            val param = setValueViewModel.parameters
             param.add(it)
 
-            setValueViewModel.nonUseParameters = param
-            setNonUseValueAdapter.notifyItemInserted(param.size)
-        }
-        setValueViewModel.parameters = tempList
+            setValueViewModel.parameters = param
 
-        setValueAdapter.notifyItemRemoved(index)
+            setValueAdapter.notifyItemInserted(param.size)
+        }
+        setValueViewModel.nonUseParameters = tempList
+
+        setNonUseValueAdapter.notifyItemRemoved(index)
     }
 }

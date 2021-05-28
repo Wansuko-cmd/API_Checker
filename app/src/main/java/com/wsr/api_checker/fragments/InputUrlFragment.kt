@@ -17,6 +17,7 @@ import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.databinding.FragmentInputUrlBinding
 import com.wsr.api_checker.entities.Parameter
+import com.wsr.api_checker.item_touch_helper.SetNonUseValueItemTouchHelper
 import com.wsr.api_checker.item_touch_helper.SetValueItemTouchHelper
 import com.wsr.api_checker.methods.*
 import com.wsr.api_checker.view_model.SetValueViewModel
@@ -82,6 +83,11 @@ class InputUrlFragment : Fragment() {
                 = ItemTouchHelper(SetValueItemTouchHelper(setValueViewModel, setValueAdapter, setNonUseValueAdapter))
 
         setValueItemTouchHelperCallback.attachToRecyclerView(setValueRecyclerView)
+
+        val setNonUseValueItemTouchHelperCallback
+        = ItemTouchHelper(SetNonUseValueItemTouchHelper(setValueViewModel, setValueAdapter, setNonUseValueAdapter))
+
+        setNonUseValueItemTouchHelperCallback.attachToRecyclerView(setNonUseValueRecyclerView)
 
 
         //Viewの設定

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.adapters.view_holder.SetNonUseValueViewHolder
 import com.wsr.api_checker.databinding.ItemsNonSetValueBinding
 import com.wsr.api_checker.view_model.SetValueViewModel
+import java.lang.IndexOutOfBoundsException
 
 class SetNonUseValueAdapter(
     private val setValueViewModel: SetValueViewModel
@@ -20,6 +21,8 @@ class SetNonUseValueAdapter(
     }
 
     override fun onBindViewHolder(holder: SetNonUseValueViewHolder, position: Int) {
-        holder.setBind(setValueViewModel.nonUseParameters[position])
+        try{
+            holder.setBind(setValueViewModel.nonUseParameters[position])
+        }catch (e: IndexOutOfBoundsException){}
     }
 }
