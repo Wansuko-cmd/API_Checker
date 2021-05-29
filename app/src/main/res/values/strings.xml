@@ -4,6 +4,8 @@
     <string name="key">Key</string>
     <string name="value">Value</string>
     <string name="send">SEND</string>
+    <string name="non_use_parameter">使用しないパラメーター</string>
+    <string name="parameter">パラメーター</string>
 
     <string-array name="methods">
         <item>GET</item>

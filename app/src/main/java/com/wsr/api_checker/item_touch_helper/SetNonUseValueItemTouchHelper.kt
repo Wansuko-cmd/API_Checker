@@ -11,7 +11,7 @@ class SetNonUseValueItemTouchHelper(
     private val setValueAdapter: SetValueAdapter,
     private val setNonUseValueAdapter: SetNonUseValueAdapter
 ): ItemTouchHelper.SimpleCallback(
-    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+    0,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
     override fun onMove(
@@ -19,23 +19,32 @@ class SetNonUseValueItemTouchHelper(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val index = viewHolder.bindingAdapterPosition
 
         val tempList = setValueViewModel.nonUseParameters
-        tempList.removeAt(index).let{
-            val param = setValueViewModel.parameters
-            param.add(it)
 
-            setValueViewModel.parameters = param
 
-            setValueAdapter.notifyItemInserted(param.size)
+        if(direction == ItemTouchHelper.LEFT){
+            tempList.removeAt(index)
+            setValueViewModel.nonUseParameters = tempList
+        }else{
+
+            tempList.removeAt(index).let{
+                val param = setValueViewModel.parameters
+                param.add(it)
+
+                setValueViewModel.parameters = param
+
+                setValueAdapter.notifyItemInserted(param.size)
+            }
+            setValueViewModel.nonUseParameters = tempList
         }
-        setValueViewModel.nonUseParameters = tempList
 
         setNonUseValueAdapter.notifyItemRemoved(index)
+
     }
 }

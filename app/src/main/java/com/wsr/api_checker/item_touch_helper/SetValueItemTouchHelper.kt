@@ -26,14 +26,20 @@ class SetValueItemTouchHelper(
         val index = viewHolder.bindingAdapterPosition
 
         val tempList = setValueViewModel.parameters
-        tempList.removeAt(index).let{
-            val param = setValueViewModel.nonUseParameters
-            param.add(it)
 
-            setValueViewModel.nonUseParameters = param
-            setNonUseValueAdapter.notifyItemInserted(param.size)
+        if(direction == ItemTouchHelper.LEFT){
+            tempList.removeAt(index)
+            setValueViewModel.parameters = tempList
+        }else{
+            tempList.removeAt(index).let{
+                val param = setValueViewModel.nonUseParameters
+                param.add(it)
+
+                setValueViewModel.nonUseParameters = param
+                setNonUseValueAdapter.notifyItemInserted(param.size)
+            }
+            setValueViewModel.parameters = tempList
         }
-        setValueViewModel.parameters = tempList
 
         setValueAdapter.notifyItemRemoved(index)
     }
