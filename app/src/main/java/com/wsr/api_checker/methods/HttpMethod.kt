@@ -8,13 +8,13 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
-abstract class HttpMethod {
+interface HttpMethod {
 
     //OkHttpClientを持つメンバ変数
-    abstract val client: OkHttpClient
+    val client: OkHttpClient
 
     //Urlを渡したところにリクエストを送る関数
-    abstract suspend fun getRequest(setValueViewModel: SetValueViewModel): Pair<Boolean, String>
+    suspend fun getRequest(setValueViewModel: SetValueViewModel): Pair<Boolean, String>
 
     //通信の際起こったエラーのハンドリング
     fun errorHandling(e: Exception): Pair<Boolean, String>{

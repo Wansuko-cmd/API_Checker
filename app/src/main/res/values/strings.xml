@@ -7,6 +7,10 @@
     <string name="non_use_parameter">使用しないパラメーター</string>
     <string name="parameter">パラメーター</string>
 
+    <string name="snack_bar_message">アイテムを一つ削除しました</string>
+    <string name="snack_bar_action">UNDO</string>
+    <string name="snack_bar_after">アイテムを戻しました</string>
+
     <string-array name="methods">
         <item>GET</item>
         <item>POST</item>

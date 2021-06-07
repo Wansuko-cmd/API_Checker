@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.UnknownHostException
 
-class Delete(override val client: OkHttpClient) : HttpMethod() {
+class Delete(override val client: OkHttpClient) : HttpMethod {
 
     //Urlを渡したところにリクエストを送る関数
     @Suppress("BlockingMethodInNonBlockingContext")

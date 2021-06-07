@@ -2,6 +2,7 @@ package com.wsr.api_checker.item_touch_helper
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
 import com.wsr.api_checker.entities.Parameter
@@ -10,7 +11,8 @@ import com.wsr.api_checker.view_model.SetValueViewModel
 class SetNonUseValueItemTouchHelper(
     private val setValueViewModel: SetValueViewModel,
     private val setValueAdapter: SetValueAdapter,
-    private val setNonUseValueAdapter: SetNonUseValueAdapter
+    private val setNonUseValueAdapter: SetNonUseValueAdapter,
+    private val snackBar: Snackbar
 ): ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.UP or ItemTouchHelper.DOWN,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -52,7 +54,11 @@ class SetNonUseValueItemTouchHelper(
 
         //左にスワイプしたとき（削除）
         if(direction == ItemTouchHelper.LEFT){
-            nonUserParameterList.removeAt(index)
+            nonUserParameterList.removeAt(index).let{
+                setValueViewModel.deleteValue = Pair("nonUseParameters", it)
+            }
+
+            snackBar.show()
         }
         //右にスワイプしたとき（有効化）
          else{

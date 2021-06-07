@@ -7,7 +7,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class Post(override val client: OkHttpClient) : HttpMethod() {
+class Post(override val client: OkHttpClient) : HttpMethod {
 
     //Urlを渡したところにリクエストを送る関数
     @Suppress("BlockingMethodInNonBlockingContext")

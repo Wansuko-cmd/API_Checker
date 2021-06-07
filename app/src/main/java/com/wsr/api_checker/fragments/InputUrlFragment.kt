@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.wsr.api_checker.R
 import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
@@ -37,7 +38,8 @@ class InputUrlFragment : Fragment() {
 
     private lateinit var setValueViewModel: SetValueViewModel
 
-    private lateinit var methods: HttpMethod
+    //UNDOを表示するためのsnackBar
+    private lateinit var snackBar: Snackbar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,24 +56,29 @@ class InputUrlFragment : Fragment() {
         //Methodを決めるためのスピナーの設定
         setSpinner()
 
+
+        snackBar = setSnackBar()
+
         //パラメータのためのViewModelの設定
         setValueViewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(SetValueViewModel::class.java)
 
-        //アダプターの設定
+        //有効パラメーター用アダプターの設定
         setValueAdapter = SetValueAdapter(setValueViewModel)
 
-        //RecyclerViewの設定
+        //有効パラメーター用RecyclerViewの設定
         setValueRecyclerView = binding.setValueRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = setValueAdapter
         }
 
+        //無効パラメーター用アダプターの設定
         setNonUseValueAdapter = SetNonUseValueAdapter(setValueViewModel)
 
+        //無効パラメーター用RecyclerViewの設定
         setNonUseValueRecyclerView = binding.setNonUseValueRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
@@ -79,13 +86,21 @@ class InputUrlFragment : Fragment() {
         }
 
 
-        val setValueItemTouchHelperCallback
-                = ItemTouchHelper(SetValueItemTouchHelper(setValueViewModel, setValueAdapter, setNonUseValueAdapter))
+        val setValueItemTouchHelperCallback = ItemTouchHelper(SetValueItemTouchHelper(
+            setValueViewModel,
+            setValueAdapter,
+            setNonUseValueAdapter,
+            snackBar
+        ))
 
         setValueItemTouchHelperCallback.attachToRecyclerView(setValueRecyclerView)
 
-        val setNonUseValueItemTouchHelperCallback
-        = ItemTouchHelper(SetNonUseValueItemTouchHelper(setValueViewModel, setValueAdapter, setNonUseValueAdapter))
+        val setNonUseValueItemTouchHelperCallback = ItemTouchHelper(SetNonUseValueItemTouchHelper(
+            setValueViewModel,
+            setValueAdapter,
+            setNonUseValueAdapter,
+            snackBar
+        ))
 
         setNonUseValueItemTouchHelperCallback.attachToRecyclerView(setNonUseValueRecyclerView)
 
@@ -124,11 +139,12 @@ class InputUrlFragment : Fragment() {
         val client = OkHttpClient.Builder().build()
 
         //メソッドの設定
-        when(binding.methodsSpinner.selectedItem){
-            "GET" -> methods = Get(client)
-            "POST" -> methods = Post(client)
-            "PUT" -> methods = Put(client)
-            "DELETE" -> methods = Delete(client)
+        val methods: HttpMethod = when(binding.methodsSpinner.selectedItem){
+            "GET" -> Get(client)
+            "POST" -> Post(client)
+            "PUT" -> Put(client)
+            "DELETE" -> Delete(client)
+            else -> throw Exception()
         }
 
         runBlocking {
@@ -159,11 +175,50 @@ class InputUrlFragment : Fragment() {
 
 
 
+    //Undo機能の設定
+    private fun setSnackBar(): Snackbar {
+
+        //snackBarの設定
+        return Snackbar.make(
+            binding.showSnackBarLayout,
+            getString(R.string.snack_bar_message),
+            Snackbar.LENGTH_LONG
+        )
+            .setAction(getString(R.string.snack_bar_action)) {
+
+                setValueViewModel.deleteValue?.let{ value ->
+
+                    if(value.first == "parameters"){
+                        val parameters = setValueViewModel.parameters
+                        parameters.add(value.second)
+                        setValueViewModel.parameters = parameters
+                        setValueAdapter.notifyItemInserted(parameters.size)
+
+                    }else{
+                        val nonUseParameters = setValueViewModel.nonUseParameters
+                        nonUseParameters.add(value.second)
+                        setValueViewModel.nonUseParameters = nonUseParameters
+                        setNonUseValueAdapter.notifyItemInserted(nonUseParameters.size)
+                    }
+
+                }
+
+                //無事に要素を戻したことを伝えるsnackBarの設定
+                Snackbar.make(
+                    binding.showSnackBarLayout,
+                    getString(R.string.snack_bar_after),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+
+
     //新しいパラメーターを追加するためのボタンの設定をする関数
     private val addParameterSetOnClickListener: (View) -> Unit = {
         val parameters = setValueViewModel.parameters
         parameters.add(Parameter())
         setValueViewModel.parameters = parameters
-        setValueAdapter.notifyDataSetChanged()
+        setValueAdapter.notifyItemInserted(parameters.size)
     }
 }
