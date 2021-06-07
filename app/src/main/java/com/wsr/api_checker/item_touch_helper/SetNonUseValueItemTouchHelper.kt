@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.wsr.api_checker.adapters.SetNonUseValueAdapter
 import com.wsr.api_checker.adapters.SetValueAdapter
+import com.wsr.api_checker.entities.Parameter
 import com.wsr.api_checker.view_model.SetValueViewModel
 
 class SetNonUseValueItemTouchHelper(
@@ -11,40 +12,70 @@ class SetNonUseValueItemTouchHelper(
     private val setValueAdapter: SetValueAdapter,
     private val setNonUseValueAdapter: SetNonUseValueAdapter
 ): ItemTouchHelper.SimpleCallback(
-    0,
+    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
+
+    private var parameterList = mutableListOf<Parameter>()
+    private var nonUserParameterList = mutableListOf<Parameter>()
+
+    private var isDrag = false
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+
+        parameterList = setValueViewModel.parameters
+        nonUserParameterList = setValueViewModel.nonUseParameters
+
+        if(actionState == ItemTouchHelper.ACTION_STATE_DRAG) isDrag = true
+    }
+
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+        val fromPosition = viewHolder.bindingAdapterPosition
+        val toPosition = target.bindingAdapterPosition
+
+        val fromValue = nonUserParameterList[fromPosition]
+        nonUserParameterList[fromPosition] = nonUserParameterList[toPosition]
+        nonUserParameterList[toPosition] = fromValue
+
+        setNonUseValueAdapter.notifyItemMoved(fromPosition, toPosition)
+
         return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val index = viewHolder.bindingAdapterPosition
 
-        val tempList = setValueViewModel.nonUseParameters
-
-
+        //左にスワイプしたとき（削除）
         if(direction == ItemTouchHelper.LEFT){
-            tempList.removeAt(index)
-            setValueViewModel.nonUseParameters = tempList
-        }else{
+            nonUserParameterList.removeAt(index)
+        }
+        //右にスワイプしたとき（有効化）
+         else{
 
-            tempList.removeAt(index).let{
-                val param = setValueViewModel.parameters
-                param.add(it)
+            nonUserParameterList.removeAt(index).let{
+                parameterList.add(it)
 
-                setValueViewModel.parameters = param
-
-                setValueAdapter.notifyItemInserted(param.size)
+                setValueViewModel.parameters = parameterList
+                setValueAdapter.notifyItemInserted(parameterList.size)
             }
-            setValueViewModel.nonUseParameters = tempList
         }
 
+        setValueViewModel.nonUseParameters = nonUserParameterList
         setNonUseValueAdapter.notifyItemRemoved(index)
+    }
 
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+
+        if(isDrag) {
+            setValueViewModel.nonUseParameters = nonUserParameterList
+            isDrag = false
+        }
+
+        super.clearView(recyclerView, viewHolder)
     }
 }
